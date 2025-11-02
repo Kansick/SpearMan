@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "DevelopersInputs",
+    "maps": [
+        {
+            "name": "Scene",
+            "id": "226a5024-2739-42bf-8ad9-b006ea7c0a94",
+            "actions": [
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "a0f9ee5f-bcf8-4148-ae58-93f66bba7400",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ce5c6dcb-9d58-4734-8825-48a9445b692d",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
