@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using System.Collections;
+
 public class PerlinNoize : MonoBehaviour
 {
     [SerializeField] private float _mapWidth;
@@ -11,18 +12,14 @@ public class PerlinNoize : MonoBehaviour
 
     [SerializeField] private GameObject _square;
     [SerializeField] private Transform _mapParent;
+    [SerializeField] private int _sectionSize;
 
     private DevelopersInputs _inputs;
     private float _offsetX;
     private float _offsetY;
     private float _scale = 10f;
     [SerializeField] private string _seed;
-    [SerializeField] private float _delayGenerateMap;
-    [SerializeField] private int _countLive = 200;
 
-    // Кэши для ускорения
-    private Dictionary<string, GameObject> _cellCache;
-    private Dictionary<GameObject, SpriteRenderer> _rendererCache;
 
     private void Awake()
     {
@@ -56,86 +53,16 @@ public class PerlinNoize : MonoBehaviour
     private void Start()
     {
         CreateHeights();
-        CreateMap();
-        BuildCache(); // Строим кэш после создания карты
-        //StartCoroutine(Live(0));
+        CreatePerlinNoise();
+        StartCoroutine(CreateMap());
     }
 
-    private void BuildCache()
+    private IEnumerator CreateMap()
     {
-        _cellCache = new Dictionary<string, GameObject>();
-        _rendererCache = new Dictionary<GameObject, SpriteRenderer>();
-
-        for (int i = 0; i < _mapParent.childCount; i++)
-        {
-            GameObject cell = _mapParent.GetChild(i).gameObject;
-            _cellCache[cell.name] = cell;
-            _rendererCache[cell] = cell.GetComponent<SpriteRenderer>();
-        }
+        yield return null;
     }
 
-    private IEnumerator Live(int count)
-    {
-        for (int i = 0; i < _mapParent.childCount; i++)
-        {
-            GameObject cell = _mapParent.GetChild(i).gameObject;
-            Color colorCell = _rendererCache[cell].color;
-            string[] posCell = cell.name.Split('_');
-            List<GameObject> _cellsNeighbors = GetAllNeighbors(int.Parse(posCell[0]), int.Parse(posCell[1]));
-            if (colorCell == Color.black)
-            {
-                RuleThreeWhiteToOneWhite(cell, _cellsNeighbors);
-            }
-            if (_delayGenerateMap > 0)
-                yield return new WaitForSeconds(_delayGenerateMap);
-            else
-                yield return null;
-        }
-        if (count < _countLive)
-            StartCoroutine(Live(++count));
-    }
-
-    private void RuleThreeWhiteToOneWhite(GameObject _currentCell, List<GameObject> _cellsNeighbors)
-    {
-        int colorWhiteCount = 0;
-        foreach (GameObject cell in _cellsNeighbors)
-        {
-            Color colorCell = _rendererCache[cell].color;
-            if (colorCell == Color.white)
-            {
-                colorWhiteCount++;
-            }
-        }
-        if (colorWhiteCount >= 2)
-        {
-            _rendererCache[_currentCell].color = Color.white;
-        }
-    }
-
-    private List<GameObject> GetAllNeighbors(int x, int y)
-    {
-        List<GameObject> neighbors = new List<GameObject>();
-
-        Vector2Int[] directions = {
-            new Vector2Int(0, 1),    // верх
-            new Vector2Int(1, 0),    // право
-            new Vector2Int(0, -1),   // низ
-            new Vector2Int(-1, 0),   // лево
-        };
-
-        foreach (var dir in directions)
-        {
-            string neighborName = (x + dir.x) + "_" + (y + dir.y);
-            if (_cellCache.TryGetValue(neighborName, out GameObject neighbor))
-            {
-                neighbors.Add(neighbor);
-            }
-        }
-
-        return neighbors;
-    }
-
-    private void CreateMap()
+    private void CreatePerlinNoise()
     {
         int heightNumber = 0;
         for (int i = 0; i < _mapHeight; i++)
@@ -167,6 +94,7 @@ public class PerlinNoize : MonoBehaviour
 
     private void SetColorSquare(GameObject square, float pair)
     {
-        square.GetComponent<SpriteRenderer>().color = pair < 0.5 ? Color.white : Color.black;
+        square.GetComponent<SpriteRenderer>().color = pair < 0.5 ? Color.black : Color.white;
+        //square.GetComponent<SpriteRenderer>().color = new Color(pair, pair, pair, 1f);
     }
 }
