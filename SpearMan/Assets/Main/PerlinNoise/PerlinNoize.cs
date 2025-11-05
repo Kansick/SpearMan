@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 public class PerlinNoize : MonoBehaviour
 {
@@ -11,6 +14,7 @@ public class PerlinNoize : MonoBehaviour
     private List<float> _heights = new List<float>();
 
     [SerializeField] private GameObject _square;
+    [SerializeField] private GameObject _circle;
     [SerializeField] private Transform _mapParent;
     [SerializeField] private int _sectionSize;
 
@@ -53,7 +57,8 @@ public class PerlinNoize : MonoBehaviour
     private void Start()
     {
         CreateHeights();
-        CreatePerlinNoise();
+        //CreatePerlinNoise();
+        CreateCircle();
         StartCoroutine(CreateMap());
     }
 
@@ -62,23 +67,33 @@ public class PerlinNoize : MonoBehaviour
         yield return null;
     }
 
-    private void CreatePerlinNoise()
+    //private void CreatePerlinNoise()
+    //{
+    //    int heightNumber = 0;
+    //    for (int i = 0; i < _mapHeight; i++)
+    //    {
+    //        for (int j = 0; j < _mapWidth; j++)
+    //        {
+    //            GameObject square = Instantiate(_square, _mapParent);
+    //            square.name = j + "_" + i;
+    //            square.transform.position = new Vector3(j, i, 0);
+    //            SetColorSquare(square, _heights[heightNumber]);
+    //            //_heights[heightNumber] = _heights[heightNumber] < 0.5 ? 0 : 1;
+    //            heightNumber++;
+    //        }
+    //    }
+    //}
+
+    private void CreateCircle()
     {
-        int heightNumber = 0;
-        for (int i = 0; i < _mapHeight; i++)
+        for (int i = 0; i < _mapWidth; i++)
         {
-            for (int j = 0; j < _mapWidth; j++)
-            {
-                GameObject square = Instantiate(_square, _mapParent);
-                square.name = j + "_" + i;
-                square.transform.position = new Vector3(j, i, 0);
-                SetColorSquare(square, _heights[heightNumber]);
-                _heights[heightNumber] = _heights[heightNumber] < 0.5 ? 0 : 1;
-                heightNumber++;
-            }
+            GameObject circle = Instantiate(_circle, _mapParent);
+            circle.name = i.ToString();
+            circle.transform.position = new Vector3(i*circle.transform.localScale.x, 0, 0);
+            circle.transform.localScale = new Vector3(circle.transform.localScale.x, Random.Range(circle.transform.localScale.y, circle.transform.localScale.y*2), 1);//circle.transform.localScale.y * _heights[i]
         }
     }
-
     private void CreateHeights()
     {
         for (int i = 0; i < _mapHeight; i++)

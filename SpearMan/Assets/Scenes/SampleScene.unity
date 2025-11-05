@@ -269,9 +269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f808d35ed4f0a34d80adce38588dd0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PerlinNoize
-  _mapWidth: 100
+  _mapWidth: 50
   _mapHeight: 100
   _square: {fileID: 8854223031979361851, guid: 2d8190de03a2f0c42975a4682f862bae, type: 3}
+  _circle: {fileID: 722437182855739090, guid: 0121028c04f1d8b4ba3d4bc3e6bb1134, type: 3}
   _mapParent: {fileID: 1331195371}
   _sectionSize: 0
   _seed: 
